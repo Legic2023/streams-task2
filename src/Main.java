@@ -26,7 +26,8 @@ public class Main {
 
         //Список фамилий призывников (т.е. мужчин от 18 и до 27 лет).
         List<String> recruitFamily = persons.stream()
-                .filter(x -> (x.getAge() > 18) && (x.getAge() > 27))
+                .filter(x -> (x.getAge() >= 18) && (x.getAge() <= 27))
+                .filter(x -> (x.getSex() == Sex.MAN))
                 .map(Person::getFamily)
                 .collect(Collectors.toList());
         System.out.printf("2. В Лондоне можно мобилизовать %s призывников (первые три фамилии):%n", recruitFamily.size());
@@ -36,10 +37,10 @@ public class Main {
 
         // Отсортированный по фамилии список людей с в/о в выборке (т.е. людей с в/о от 18 до 60 лет для женщин и до 65 лет для мужчин).
         List<Person> workingPeople = persons.stream()
-                .filter(x -> x.getAge() > 18)
+                .filter(x -> x.getAge() >= 18)
                 .filter(x -> x.getEducation() == Education.HIGHER)
-                .filter(x -> x.getAge() < 65)
-                .filter(x -> !((x.getAge() > 60) && (x.getSex() == Sex.WOMAN)))
+                .filter(x -> x.getAge() <= 65)
+                .filter(x -> (x.getAge() <= 60) || (x.getSex() == Sex.MAN))
                 .sorted(Comparator.comparing(x -> x.getFamily()))
                 .collect(Collectors.toList());
         System.out.printf("3. В Лондоне %s людей рабочего возраста (первые три человека):%n", workingPeople.size());
